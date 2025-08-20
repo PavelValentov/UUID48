@@ -1,2 +1,1 @@
-# UUID
-Universally Unique Identifier
+# UUID: Universally Unique Identifier
