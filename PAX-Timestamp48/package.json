@@ -14,7 +14,7 @@
   },
   "keywords": [
     "uuid",
-    "timestamp", 
+    "timestamp",
     "base64url",
     "uuid7",
     "rfc9562",
@@ -25,7 +25,7 @@
     "monotonic",
     "professional"
   ],
-  "author": "aether-tools",
+  "author": "Pavel Valentov",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
@@ -43,7 +43,7 @@
       "import": "./src/index.js"
     },
     "./timestamp": {
-      "types": "./types/index.d.ts", 
+      "types": "./types/index.d.ts",
       "import": "./src/timestamp.js"
     },
     "./base64url": {
@@ -53,10 +53,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/aether-tools/uuid48-timestamp"
+    "url": "https://github.com/PavelValentov/UUID48"
   },
   "bugs": {
-    "url": "https://github.com/aether-tools/uuid48-timestamp/issues"
+    "url": "https://github.com/PavelValentov/UUID48/issues"
   },
-  "homepage": "https://github.com/aether-tools/uuid48-timestamp#readme"
+  "homepage": "https://github.com/PavelValentov/UUID48#readme"
 }

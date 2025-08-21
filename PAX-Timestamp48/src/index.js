@@ -1,11 +1,11 @@
 /**
  * UUID48 Timestamp Generator - Main API Interface
- * 
+ *
  * Provides hybrid convenience + power API for 48-bit timestamp generation.
  * Implements progressive complexity: simple functions for common use cases,
  * advanced class for power users with full configuration options.
- * 
- * @author aether-tools
+ *
+ * @author Pavel Valentov
  * @license MIT
  */
 
@@ -70,7 +70,7 @@ export function validate(timestamp, format = "base64url") {
     if (timestamp == null) {
         return false;
     }
-    
+
     try {
         switch (format) {
             case "base64url":
@@ -111,7 +111,7 @@ export class TimestampGenerator {
             waitStrategy: options.waitStrategy || "increment"
         });
         this.defaultFormat = options.defaultFormat || "base64url";
-        
+
         // Validate defaultFormat
         if (!["base64url", "hex", "buffer"].includes(this.defaultFormat)) {
             throw new Error(
@@ -120,7 +120,7 @@ export class TimestampGenerator {
             );
         }
     }
-    
+
     /**
      * Generate timestamp in default or specified format
      * @param {string} format - Output format (optional, uses defaultFormat if not specified)
@@ -140,7 +140,7 @@ export class TimestampGenerator {
             throw new Error(`Failed to generate timestamp: ${error.message}`);
         }
     }
-    
+
     /**
      * Generate multiple timestamps efficiently
      * @param {number} count - Number of timestamps to generate
@@ -152,14 +152,14 @@ export class TimestampGenerator {
         if (!Number.isInteger(count) || count <= 0) {
             throw new Error("Count must be a positive integer");
         }
-        
+
         const results = [];
         for (let i = 0; i < count; i++) {
             results.push(this.generate(format));
         }
         return results;
     }
-    
+
     /**
      * Get current generator configuration
      * @returns {Object} Current configuration
@@ -170,7 +170,7 @@ export class TimestampGenerator {
             defaultFormat: this.defaultFormat
         };
     }
-    
+
     /**
      * Validate timestamp using this generators default format
      * @param {string|Buffer} timestamp - Timestamp to validate
@@ -186,7 +186,7 @@ export class TimestampGenerator {
  * Convert timestamp between formats
  * @param {string|Buffer} timestamp - Input timestamp
  * @param {string} fromFormat - Current format of timestamp
- * @param {string} toFormat - Desired output format  
+ * @param {string} toFormat - Desired output format
  * @returns {string|Buffer} Converted timestamp
  * @throws {Error} If conversion fails or formats are invalid
  */
@@ -195,7 +195,7 @@ export function convert(timestamp, fromFormat, toFormat) {
     if (!validate(timestamp, fromFormat)) {
         throw new Error(`Invalid timestamp for format "${fromFormat}"`);
     }
-    
+
     // Convert to buffer first (common intermediate format)
     let buffer;
     switch (fromFormat) {
@@ -211,7 +211,7 @@ export function convert(timestamp, fromFormat, toFormat) {
         default:
             throw new Error(`Unsupported source format: ${fromFormat}`);
     }
-    
+
     // Convert from buffer to target format
     return formatOutput(buffer, toFormat);
 }
@@ -231,7 +231,7 @@ export function timestampToDate(timestamp, format = "base64url") {
     if (!validate(timestamp, format)) {
         throw new Error(`Invalid timestamp for format "${format}"`);
     }
-    
+
     let buffer;
     switch (format) {
         case "buffer":
@@ -246,7 +246,7 @@ export function timestampToDate(timestamp, format = "base64url") {
         default:
             throw new Error(`Unsupported format: ${format}`);
     }
-    
+
     const timestampMs = UUID48Timestamp.bufferToTimestamp(buffer);
     return new Date(Number(timestampMs));
 }

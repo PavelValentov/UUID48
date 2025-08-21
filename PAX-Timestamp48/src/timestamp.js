@@ -1,10 +1,10 @@
 /**
  * UUID48Timestamp - Core 48-bit Timestamp Generator
- * 
+ *
  * Implements hybrid precision approach for UUIDv7-compatible timestamp generation.
  * Uses system time synchronization with sub-millisecond counter for high-frequency scenarios.
- * 
- * @author aether-tools
+ *
+ * @author Pavel Valentov
  * @license MIT
  */
 
@@ -20,17 +20,17 @@ export class UUID48Timestamp {
         this.subMillisecondCounter = 0n;
         this.maxSubMs = BigInt(options.maxSubMs || 4096); // 12-bit counter space
         this.waitStrategy = options.waitStrategy || "increment"; // "increment" | "wait"
-        
+
         // Validate options
         if (this.maxSubMs <= 0n || this.maxSubMs > 65536n) {
             throw new Error(`maxSubMs must be between 1 and 65536, got ${this.maxSubMs}`);
         }
-        
+
         if (!["increment", "wait"].includes(this.waitStrategy)) {
             throw new Error(`waitStrategy must be "increment" or "wait", got "${this.waitStrategy}"`);
         }
     }
-    
+
     /**
      * Generate a 48-bit timestamp as 6-byte Buffer
      * @returns {Buffer} 6-byte buffer containing the timestamp in big-endian format
@@ -38,7 +38,7 @@ export class UUID48Timestamp {
      */
     generate() {
         const systemTime = BigInt(Date.now());
-        
+
         if (systemTime === this.lastSystemTime) {
             return this._handleSameMillisecond(systemTime);
         } else if (systemTime > this.lastSystemTime) {
@@ -47,14 +47,14 @@ export class UUID48Timestamp {
             return this._handleClockBackward(systemTime);
         }
     }
-    
+
     /**
      * Handle generation within the same millisecond
      * @private
      */
     _handleSameMillisecond(systemTime) {
         this.subMillisecondCounter++;
-        
+
         if (this.subMillisecondCounter >= this.maxSubMs) {
             if (this.waitStrategy === "wait") {
                 return this._waitForNextMillisecond();
@@ -66,10 +66,10 @@ export class UUID48Timestamp {
                 return this._timestampToBuffer(incrementedTime);
             }
         }
-        
+
         return this._timestampToBuffer(systemTime);
     }
-    
+
     /**
      * Handle new millisecond
      * @private
@@ -79,7 +79,7 @@ export class UUID48Timestamp {
         this.subMillisecondCounter = 0n;
         return this._timestampToBuffer(systemTime);
     }
-    
+
     /**
      * Handle clock moving backward
      * @private
@@ -90,7 +90,7 @@ export class UUID48Timestamp {
         this.subMillisecondCounter = 0n;
         return this._timestampToBuffer(this.lastSystemTime);
     }
-    
+
     /**
      * Convert timestamp to 6-byte buffer
      * @private
@@ -104,7 +104,7 @@ export class UUID48Timestamp {
                 `This indicates system time is beyond year 8921. Check system clock configuration.`
             );
         }
-        
+
         // Convert to 6-byte buffer in big-endian format
         return Buffer.from([
             Number((timestamp >> 40n) & 0xFFn),
@@ -115,7 +115,7 @@ export class UUID48Timestamp {
             Number(timestamp & 0xFFn)
         ]);
     }
-    
+
     /**
      * Wait for next millisecond (busy wait)
      * @private
@@ -126,7 +126,7 @@ export class UUID48Timestamp {
         }
         return this.generate();
     }
-    
+
     /**
      * Validate a 6-byte timestamp buffer
      * @param {Buffer} buffer - Buffer to validate
@@ -136,11 +136,11 @@ export class UUID48Timestamp {
         if (!Buffer.isBuffer(buffer)) {
             return false;
         }
-        
+
         if (buffer.length !== 6) {
             return false;
         }
-        
+
         // Convert back to timestamp and check range
         try {
             const timestamp = (BigInt(buffer[0]) << 40n) |
@@ -149,13 +149,13 @@ export class UUID48Timestamp {
                             (BigInt(buffer[3]) << 16n) |
                             (BigInt(buffer[4]) << 8n) |
                             BigInt(buffer[5]);
-            
+
             return timestamp <= 0xFFFFFFFFFFFFn;
         } catch {
             return false;
         }
     }
-    
+
     /**
      * Convert 6-byte buffer back to timestamp for validation/debugging
      * @param {Buffer} buffer - 6-byte timestamp buffer
@@ -166,7 +166,7 @@ export class UUID48Timestamp {
         if (!this.validateBuffer(buffer)) {
             throw new Error("Invalid timestamp buffer: must be 6 bytes");
         }
-        
+
         return (BigInt(buffer[0]) << 40n) |
                (BigInt(buffer[1]) << 32n) |
                (BigInt(buffer[2]) << 24n) |
@@ -174,7 +174,7 @@ export class UUID48Timestamp {
                (BigInt(buffer[4]) << 8n) |
                BigInt(buffer[5]);
     }
-    
+
     /**
      * Get current configuration
      * @returns {Object} Current configuration options

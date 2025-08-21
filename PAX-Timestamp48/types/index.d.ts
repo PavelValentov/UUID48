@@ -1,9 +1,9 @@
 /**
  * TypeScript definitions for @tools/uuid48-timestamp
- * 
+ *
  * Professional 48-bit timestamp generator for UUIDv7 compliance with Base64URL encoding
- * 
- * @author aether-tools
+ *
+ * @author Pavel Valentov
  * @license MIT
  */
 
@@ -40,27 +40,27 @@ export interface TimestampGeneratorConfiguration extends TimestampConfiguration 
 // Core timestamp generation class
 export declare class UUID48Timestamp {
     constructor(options?: UUID48TimestampOptions);
-    
+
     /**
      * Generate a 48-bit timestamp as 6-byte Buffer
      * @returns 6-byte buffer containing the timestamp in big-endian format
      * @throws Error if timestamp exceeds 48-bit limit
      */
     generate(): Buffer;
-    
+
     /**
      * Get current configuration
      * @returns Current configuration options
      */
     getConfig(): TimestampConfiguration;
-    
+
     /**
      * Validate a 6-byte timestamp buffer
      * @param buffer Buffer to validate
      * @returns True if valid 6-byte timestamp
      */
     static validateBuffer(buffer: unknown): buffer is Buffer;
-    
+
     /**
      * Convert 6-byte buffer back to timestamp for validation/debugging
      * @param buffer 6-byte timestamp buffer
@@ -105,7 +105,7 @@ export function validate(timestamp: string | Buffer, format: TimestampFormat): b
 // Advanced timestamp generator class
 export declare class TimestampGenerator {
     constructor(options?: TimestampGeneratorOptions);
-    
+
     /**
      * Generate timestamp in default or specified format
      * @param format Output format (optional, uses defaultFormat if not specified)
@@ -116,7 +116,7 @@ export declare class TimestampGenerator {
     generate(format: "hex"): string;
     generate(format: "buffer"): Buffer;
     generate(format: TimestampFormat): string | Buffer;
-    
+
     /**
      * Generate multiple timestamps efficiently
      * @param count Number of timestamps to generate
@@ -129,13 +129,13 @@ export declare class TimestampGenerator {
     generateBatch(count: number, format: "hex"): string[];
     generateBatch(count: number, format: "buffer"): Buffer[];
     generateBatch(count: number, format: TimestampFormat): Array<string | Buffer>;
-    
+
     /**
      * Get current generator configuration
      * @returns Current configuration
      */
     getConfig(): TimestampGeneratorConfiguration;
-    
+
     /**
      * Validate timestamp using this generators default format
      * @param timestamp Timestamp to validate
@@ -153,8 +153,8 @@ export function convert(timestamp: string, fromFormat: "hex", toFormat: "buffer"
 export function convert(timestamp: Buffer, fromFormat: "buffer", toFormat: "base64url"): string;
 export function convert(timestamp: Buffer, fromFormat: "buffer", toFormat: "hex"): string;
 export function convert(
-    timestamp: string | Buffer, 
-    fromFormat: TimestampFormat, 
+    timestamp: string | Buffer,
+    fromFormat: TimestampFormat,
     toFormat: TimestampFormat
 ): string | Buffer;
 
@@ -162,8 +162,8 @@ export function convert(
 export declare function timestampToDate(timestamp: string | Buffer, format?: TimestampFormat): Date;
 export declare function getTimestampAge(timestamp: string | Buffer, format?: TimestampFormat): number;
 export declare function isTimestampFresh(
-    timestamp: string | Buffer, 
-    maxAgeMs: number, 
+    timestamp: string | Buffer,
+    maxAgeMs: number,
     format?: TimestampFormat
 ): boolean;
 

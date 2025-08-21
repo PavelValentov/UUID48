@@ -21,7 +21,7 @@ Professional 48-bit timestamp generator for UUIDv7 compliance with Base64URL enc
 
 ```bash
 # Copy to your project
-cp -r /Users/ug/code/aether/local-env/tools/uuid48 ./libs/uuid48-timestamp
+cp -r ~/local-env/tools/uuid48 ./libs/uuid48-timestamp
 ```
 
 ## 🚀 Quick Start
@@ -117,7 +117,7 @@ console.log(`${age}ms ago`);
 ```typescript
 // Generate timestamps
 function generateId(): string;                    // Base64URL (8 chars)
-function generateHex(): string;                   // Hex (12 chars)  
+function generateHex(): string;                   // Hex (12 chars)
 function generateBuffer(): Buffer;                // Buffer (6 bytes)
 function generate(format?: TimestampFormat): string | Buffer;
 
@@ -142,7 +142,7 @@ class TimestampGenerator {
         waitStrategy?: "increment" | "wait";  // default: "increment"
         defaultFormat?: "base64url" | "hex" | "buffer";  // default: "base64url"
     });
-    
+
     generate(format?: TimestampFormat): string | Buffer;
     generateBatch(count: number, format?: TimestampFormat): Array<string | Buffer>;
     validate(timestamp: string | Buffer, format?: TimestampFormat): boolean;
@@ -159,7 +159,7 @@ npm test
 # Expected output:
 # ✅ 37 tests passing
 # ✅ Core algorithm tests
-# ✅ Base64URL encoding tests  
+# ✅ Base64URL encoding tests
 # ✅ Public API tests
 # ✅ Error handling tests
 ```
@@ -246,11 +246,11 @@ import { generate, validate } from "./libs/uuid48-timestamp/src/index.js";
 
 try {
     const id = generate("base64url");
-    
+
     if (!validate(id)) {
         throw new Error("Generated invalid timestamp");
     }
-    
+
 } catch (error) {
     if (error.message.includes("48-bit limit")) {
         console.error("System time beyond year 8921 - check clock");

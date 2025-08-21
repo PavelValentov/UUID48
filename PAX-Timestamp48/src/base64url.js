@@ -1,10 +1,10 @@
 /**
  * Base64URL Encoding/Decoding Module
- * 
+ *
  * Implements RFC 4648 Base64URL encoding without padding for 48-bit timestamps.
  * Provides URL-safe encoding suitable for use in web applications and APIs.
- * 
- * @author aether-tools
+ *
+ * @author Pavel Valentov
  * @license MIT
  */
 
@@ -18,11 +18,11 @@ export function encodeBase64URL(buffer) {
     if (!Buffer.isBuffer(buffer)) {
         throw new Error("Input must be a Buffer");
     }
-    
+
     if (buffer.length === 0) {
         return "";
     }
-    
+
     return buffer
         .toString("base64")
         .replace(/\+/g, "-")     // Replace + with -
@@ -40,25 +40,25 @@ export function decodeBase64URL(str) {
     if (typeof str !== "string") {
         throw new Error("Input must be a string");
     }
-    
+
     if (str.length === 0) {
         return Buffer.alloc(0);
     }
-    
+
     // Validate Base64URL character set
     if (!/^[A-Za-z0-9_-]*$/.test(str)) {
         throw new Error("Invalid Base64URL string: contains invalid characters");
     }
-    
+
     try {
         // Add padding back for standard Base64 decoding
         const padded = str + "=".repeat((4 - str.length % 4) % 4);
-        
+
         // Convert back to standard Base64
         const base64 = padded
             .replace(/-/g, "+")
             .replace(/_/g, "/");
-        
+
         return Buffer.from(base64, "base64");
     } catch (error) {
         throw new Error(`Failed to decode Base64URL string: ${error.message}`);
@@ -74,21 +74,21 @@ export function isValidBase64URL(str) {
     if (typeof str !== "string") {
         return false;
     }
-    
+
     if (str.length === 0) {
         return true; // Empty string is valid
     }
-    
+
     // Check character set (Base64URL alphabet)
     if (!/^[A-Za-z0-9_-]+$/.test(str)) {
         return false;
     }
-    
+
     // Check padding (should not have any)
     if (str.includes("=")) {
         return false;
     }
-    
+
     // Test decode to verify validity
     try {
         decodeBase64URL(str);
@@ -108,7 +108,7 @@ export function isValidTimestampBase64URL(str) {
     if (!isValidBase64URL(str) || str.length !== 8) {
         return false;
     }
-    
+
     try {
         const decoded = decodeBase64URL(str);
         return decoded.length === 6;
@@ -128,18 +128,18 @@ export function timestampToBase64URL(timestampBuffer) {
     if (!Buffer.isBuffer(timestampBuffer)) {
         throw new Error("Input must be a Buffer");
     }
-    
+
     if (timestampBuffer.length !== 6) {
         throw new Error(`Expected 6-byte timestamp buffer, got ${timestampBuffer.length} bytes`);
     }
-    
+
     const encoded = encodeBase64URL(timestampBuffer);
-    
+
     // Verify expected length for 6-byte input
     if (encoded.length !== 8) {
         throw new Error(`Expected 8-character Base64URL output, got ${encoded.length} characters`);
     }
-    
+
     return encoded;
 }
 
@@ -154,6 +154,6 @@ export function base64URLToTimestamp(base64url) {
     if (!isValidTimestampBase64URL(base64url)) {
         throw new Error("Invalid timestamp Base64URL: must be 8 characters encoding 6 bytes");
     }
-    
+
     return decodeBase64URL(base64url);
 }
